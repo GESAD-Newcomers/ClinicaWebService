@@ -12,7 +12,7 @@ namespace src.Utils.DbInteractions
         const string DbTableName = "Medicos";
 
 
-        public IEnumerable<MedicoModel> SELECT_LIKE(string table, MedicoModel obj)
+        public IEnumerable<MedicoModel> SELECT_LIKE( MedicoModel obj)
         {
             return SELECT_WHERE<MedicoModel>("Medicos", "name like '%" +obj.name+ "%' OR especialidade=" + obj.especialidade );
         }

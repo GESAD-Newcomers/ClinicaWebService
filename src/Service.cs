@@ -1,85 +1,152 @@
+using System.Linq;
 using src.Interaces;
+using src.Models;
+using src.Utils.DbInteractions;
 using src.Views;
 
 public class Service : IService
 {
+    private readonly MedicoDbInteraction mDb = new MedicoDbInteraction();
+    private readonly PacienteDbInteraction pDb = new PacienteDbInteraction();
+    private readonly AgendamentoDbInteraction aDb = new AgendamentoDbInteraction();
+    private readonly ConsultaDbInteraction cDb = new ConsultaDbInteraction();
+
     public List<MedicoView> acharMedico(MedicoView medico)
     {
-        throw new NotImplementedException();
+        if(medico.id != null)
+        {
+            var list = new List<MedicoView>();
+            list.Add(MedicoView.fromModel(mDb.SELECT_EQUALS(medico.id ?? 0)));
+
+            return list; //{};
+        }
+
+        var tM = mDb.SELECT_LIKE(MedicoModel.fromView(medico));
+
+        return (from x in tM
+              select MedicoView.fromModel(x)).ToList();
     }
 
     public List<PacienteView> acharPaciente(PacienteView paciente)
     {
-        throw new NotImplementedException();
+        if(paciente.id != null)
+        {
+            var list = new List<PacienteView>();
+            list.Add(PacienteView.fromModel(pDb.SELECT_EQUALS(paciente.id ?? 0)));
+
+            return list; //{};
+        }
+
+        var tP = pDb.SELECT_LIKE(PacienteModel.fromView(paciente));
+
+        return (from x in tP
+              select PacienteView.fromModel(x)).ToList();
+
     }
 
     public bool addMedico(MedicoView medico)
     {
-        throw new NotImplementedException();
+        // TODO: Verificar a existencia de paciente igual
+        if(true)
+        {
+            mDb.INSERT(MedicoModel.fromView(medico));
+
+            return true;
+        }
+        return false;
     }
 
     public bool addPaciente(PacienteView paciente)
     {
-        throw new NotImplementedException();
+        // TODO: Verificar a existencia de paciente igual
+        if(true)
+        {
+            pDb.INSERT(PacienteModel.fromView(paciente));
+
+            return true;
+        }
+        return false;
     }
 
-    public bool agendarConsulta(MedicoView medico, PacienteView paciente, DateTime data)
+    public bool agendarConsulta(int medicoID, int pacienteID, DateTime data)
     {
-        throw new NotImplementedException();
+        // TODO: Verificar a existencia de outras consutlas nesse horario
+        if(true)
+        {
+            aDb.INSERT(new AgendamentoModel(0, medicoID, pacienteID, data));
+
+            return true;
+        }
+        return false;
     }
 
-    public MedicoView alterarMedico(MedicoView medico)
+    public void alterarMedico(MedicoView medico)
     {
-        throw new NotImplementedException();
+        MedicoModel m = MedicoModel.fromView(medico);
+
+        mDb.UPDATE(m);
     }
 
-    public MedicoView alterarPaciente(PacienteView paciente)
+    public void alterarPaciente(PacienteView paciente)
     {
-        throw new NotImplementedException();
+        PacienteModel p = PacienteModel.fromView(paciente);
+
+        pDb.UPDATE(p);
     }
 
     public void delMedico(int id)
     {
-        throw new NotImplementedException();
+        mDb.DELETE(id);
     }
 
     public void delPaciente(int id)
     {
-        throw new NotImplementedException();
+        pDb.DELETE(id);
     }
 
-    public bool realizarConsulta()
+    public void realizarConsulta(AgendamentoView agendamento, bool realizada, string? relatorio)
     {
-        throw new NotImplementedException();
+        aDb.DELETE(agendamento.id ?? 0);
+
+        var a = AgendamentoModel.fromView(agendamento);
+
+        cDb.INSERT(new ConsultaModel(a.id, a.medicoID, a.pacienteID, a.data,realizada, relatorio));
     }
 
-    public List<ConsultaView> todasConsultas(MedicoView medico, DateTime inicio, DateTime fim)
+    public List<ConsultaView> todasConsultas(int medicoID, DateTime inicio, DateTime fim)
     {
-        throw new NotImplementedException();
+        var tC = cDb.SELECT_BETWEEN(medicoID, "medicoID", inicio, fim);
+
+        return (from x in tC select ConsultaView.fromModel(x)).ToList();
     }
 
-    public List<AgendamentoView> todosAgendamentos(MedicoView medico, DateTime inicio, DateTime fim)
+    public List<AgendamentoView> todosAgendamentosMed(int medicoID, DateTime inicio, DateTime fim)
     {
-        throw new NotImplementedException();
+        var tA = aDb.SELECT_BETWEEN(medicoID, "medicoID", inicio, fim);
+
+        return (from x in tA select AgendamentoView.fromModel(x)).ToList();
     }
 
-    public List<AgendamentoView> todosAgendamentos(PacienteView paciente, DateTime inicio, DateTime fim)
+    public List<AgendamentoView> todosAgendamentosPaci(int pacienteID, DateTime inicio, DateTime fim)
     {
-        throw new NotImplementedException();
+        var tA = aDb.SELECT_BETWEEN(pacienteID, "pacienteID", inicio, fim);
+
+        return (from x in tA select AgendamentoView.fromModel(x)).ToList();
     }
 
     public List<MedicoView> todosMedicos()
     {
-        throw new NotImplementedException();
+        var tM = mDb.SELECT_ALL();
+
+        return (from x in tM
+              select MedicoView.fromModel(x)).ToList();
     }
 
     public List<PacienteView> todosPacientes()
     {
-        throw new NotImplementedException();
-    }
+        var tP = pDb.SELECT_ALL();
 
-    PacienteView IService.alterarPaciente(PacienteView paciente)
-    {
-        throw new NotImplementedException();
+        return (from x in tP
+              select PacienteView.fromModel(x)).ToList();
     }
 }

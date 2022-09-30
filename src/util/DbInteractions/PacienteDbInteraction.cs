@@ -5,7 +5,7 @@ namespace src.Utils.DbInteractions
     public class PacienteDbInteraction : IDbInteraction
     {
         const string DbTableName = "Pacientes";
-        public IEnumerable<PacienteModel> SELECT_LIKE(string table, PacienteModel obj)
+        public IEnumerable<PacienteModel> SELECT_LIKE(PacienteModel obj)
         {
             return SELECT_WHERE<PacienteModel>(DbTableName, "name like '%" +obj.name+ "%' OR sexo=" + obj.sexo );
         }

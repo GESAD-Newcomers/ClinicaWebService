@@ -11,7 +11,7 @@ namespace src.Interaces
         [OperationContract]
         public bool addMedico(MedicoView medico);
         [OperationContract]
-        public MedicoView alterarMedico(MedicoView medico);
+        public void alterarMedico(MedicoView medico);
         [OperationContract]
         public void delMedico(int id);
         [OperationContract]
@@ -24,7 +24,7 @@ namespace src.Interaces
         [OperationContract]
         public bool addPaciente(PacienteView paciente);
         [OperationContract]
-        public PacienteView alterarPaciente(PacienteView paciente);
+        public void alterarPaciente(PacienteView paciente);
         [OperationContract]
         public void delPaciente(int id);
         [OperationContract]
@@ -35,15 +35,15 @@ namespace src.Interaces
         
         //? Operations
         
-        public bool agendarConsulta(MedicoView medico, PacienteView paciente, DateTime data);
+        public bool agendarConsulta(int medicoID, int pacienteID, DateTime data);
         [OperationContract]
-        public bool realizarConsulta();
+        public void realizarConsulta(AgendamentoView agendamento, bool realizada, string? relatorio);
         [OperationContract]
-        public List<ConsultaView> todasConsultas (MedicoView medico, DateTime inicio, DateTime fim);
+        public List<ConsultaView> todasConsultas (int medicoID, DateTime inicio, DateTime fim);
         [OperationContract]
-        public List<AgendamentoView> todosAgendamentos(MedicoView medico, DateTime inicio, DateTime fim);
+        public List<AgendamentoView> todosAgendamentosMed(int medicoID, DateTime inicio, DateTime fim);
         [OperationContract]
-        public List<AgendamentoView> todosAgendamentos(PacienteView paciente, DateTime inicio, DateTime fim);
+        public List<AgendamentoView> todosAgendamentosPaci(int pacienteID, DateTime inicio, DateTime fim);
 
     }
 

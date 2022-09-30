@@ -8,7 +8,7 @@ namespace src.Models
     public class MedicoModel : IDbObject
     {
         [DataMember]
-        public int id { get; set; }
+        public int? id { get; set; }
         [DataMember]
 
         public string name { get; set; }
@@ -28,7 +28,21 @@ namespace src.Models
             return "name='" + name + "' , espacialidade=" + especialidade;
         }
 
-        int IDbObject.id() { return id; }
+        int IDbObject.id() { return id ?? 0; }
+
+        public MedicoModel(int? id, string name, int espacialidade)
+        {
+            this.id=id;
+            this.name=name;
+            this.especialidade=especialidade;
+        }
+
+        public MedicoModel(){}
+
+
+        public static MedicoModel fromView(src.Views.MedicoView medico) => new MedicoModel(medico.id,
+                                                                                        medico.name, 
+                                                                                        ((int)medico.especialidade));
 
     }
 }

@@ -137,7 +137,7 @@ namespace src.Utils
             using(SqlConnection connection = new SqlConnection(connectionString))
             {
 
-                string query = "UPDATE " + table + " SET " + obj.toDbUpdate() + " where id=" + obj.id();
+                string query = "UPDATE " + table + " SET " + obj.toDbUpdate() + " WHERE id=" + obj.id();
                 connection.Execute(query);
             }
         }

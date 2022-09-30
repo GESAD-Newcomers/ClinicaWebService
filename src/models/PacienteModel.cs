@@ -8,7 +8,7 @@ namespace src.Models
     public class PacienteModel : IDbObject
     {
         [DataMember]
-        public int id { get; set; }
+        public int? id { get; set; }
         [DataMember]
         public string name { get; set; }
         [DataMember]
@@ -27,7 +27,19 @@ namespace src.Models
             return "name='" + name + "' , sexo=" + sexo;
         }
 
-        int IDbObject.id() { return id; }
+        int IDbObject.id() { return id ?? 0; }
 
+        public PacienteModel(int? id, string name, int sexo)
+        {
+            this.id=id;
+            this.name=name;
+            this.sexo=sexo;
+        }
+
+        public PacienteModel(){}
+
+        public static PacienteModel fromView(src.Views.PacienteView paciente) => new PacienteModel(paciente.id,
+                                                                                paciente.name, 
+                                                                                ((int)paciente.sexo));
     }
 }

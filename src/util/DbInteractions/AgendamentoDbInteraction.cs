@@ -5,9 +5,9 @@ namespace src.Utils.DbInteractions
     public class AgendamentoDbInteraction : IDbInteraction
     {
         const string DbTableName = "Agendamentos";
-        public IEnumerable<AgendamentoModel> SELECT_LIKE(string table, AgendamentoModel obj)
+        public IEnumerable<AgendamentoModel> SELECT_LIKE(AgendamentoModel obj)
         {
-            return SELECT_WHERE<AgendamentoModel>(DbTableName, "medicoID=" +obj.medicoID+ " OR pacienteID=" + obj.pacienteID + " OR data=convert(datetime, '" + obj.data.ToString("yyyy-MM-dd HH:mm:ss") + "' , 20)" );
+            return SELECT_WHERE<AgendamentoModel>(DbTableName, "medicoID=" +obj.medicoID+ " OR pacienteID=" + obj.pacienteID + " OR data=convert(datetime, '" + obj.data.ToString("yyyy-MM-dd HH:mm:ss") + "' , 21)" );
         }
 
         public void UPDATE(AgendamentoModel obj)
@@ -33,6 +33,15 @@ namespace src.Utils.DbInteractions
         public void DELETE(int id)
         {
             base.DELETE(DbTableName, id);
+        }
+
+        public IEnumerable<AgendamentoModel> SELECT_BETWEEN(DateTime d1, DateTime d2)
+        {
+            return SELECT_WHERE<AgendamentoModel>(DbTableName, $"data between convert(datetime, '{d1.ToString("yyyy-MM-dd HH:mm:ss")}', 21) AND convert(datetime, '{d2.ToString("yyyy-MM-dd HH:mm:ss")}', 21)");
+        }
+        public IEnumerable<AgendamentoModel> SELECT_BETWEEN(int id, string col,DateTime d1, DateTime d2)
+        {
+            return SELECT_WHERE<AgendamentoModel>(DbTableName, $"data between convert(datetime, '{d1.ToString("yyyy-MM-dd HH:mm:ss")}', 21) AND convert(datetime, '{d2.ToString("yyyy-MM-dd HH:mm:ss")}', 21) AND ${col}=${id}");
         }
     }
 }
